@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" href="/favicon.ico" />
 <link rel="bookmark"href="/favicon.ico" />
-<title>个人工作内容展示网</title>
+<title>我们的点点滴滴</title>
 <style type="text/css">
 * { 
 	margin:0; padding:0;
@@ -84,7 +84,7 @@ body {
                 </div>
                 <div id="clock-box" style="text-align:center">
                   <div id="clock"></div>
-				  <span id="loveYouTime">点击爱你<span id = "loveTimes"></span>次</span>
+				  <span id="loveYouTime">共点击爱你<span id = "loveTimes"></span>次</span>
 				  
               </div>
                 <canvas id="canvas" width="1100" height="680"></canvas>
@@ -95,7 +95,7 @@ body {
 	
 	</div>
 
-	<div class="footer"><span>备案号：<a href="http://www.miitbeian.gov.cn" target="_blank">湘ICP备18003068号-1</a></span></div>
+	<div class="footer"><span>备案号：<a href="http://beian.miit.gov.cn" target="_blank">湘ICP备18003068号-1</a></span></div>
 </body>
 </html>
 <style>
@@ -104,26 +104,21 @@ body {
     width: 100%;
     position:fixed; bottom:0;
     z-index: 9999;
-    text-align: right;
+    text-align: center;
     
 }
 </style>
 <script>
     var notFound = "520 Not Found<br>女朋友未找到";
-    var startText = "Click here~";
-    var metU = false;
+    var startText = "点击开始~";
+    var metU = true;
     var together = new Date();
 
-    together.setFullYear(2018,7,2);
+    together.setFullYear(2020,01,01);
     var u = "404 Not Found";
-    var me = "马文杰";
-    (function(){
-	if(metU){
-	$("#journal-reward").show();
-	}else{
-		
+    var me = "Mr.ma";
 	$("#journal-reward").hide();
-	}
+    (function(){
         var canvas = $('#canvas');
 		
         if (!canvas[0].getContext) {
@@ -234,7 +229,7 @@ body {
             foot.draw();
             tree.snapshot("p2", 500, 0, 610, 680);
 
-            // 会有闪烁不得意这样做, (＞﹏＜)
+            // 会有闪烁,so must这样做, (＞﹏＜)
             canvas.parent().css("background", "url(" + tree.toDataURL('image/png') + ")");
             canvas.css("background", "#ffe");
             $await(Jscex.Async.sleep(0));

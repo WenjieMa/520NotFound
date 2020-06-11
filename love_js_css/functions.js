@@ -55,10 +55,12 @@ function timeElapse(date){
 	}
 	var result = "";
 	if(metU==true){
-		result = "小马<span class='STYLE1'>与</span>"+u+"<span class='STYLE1'>已经相识了</span><br>第 <span class=\"digit\">" + days + "</span> 天 <span class=\"digit\">" + hours + "</span> 小时 <span class=\"digit\">" + minutes + "</span> 分钟 <span class=\"digit\">" + seconds + "</span> 秒"; 
+		result = me + "<span class='STYLE1'>与</span>"+u+"<span class='STYLE1'>已经相识了</span><br>第 <span class=\"digit\">" + days + "</span> 天 <span class=\"digit\">" + hours + "</span> 小时 <span class=\"digit\">" + minutes + "</span> 分钟 <span class=\"digit\">" + seconds + "</span> 秒"; 
 	$("#loveYouTime").show();
+	$("#journal-reward").show();
 	}else{
 		result =notFound;
+		$("#journal-reward").hide();
 		$("#loveYouTime").hide();
 	}
 	$("#clock").html(result);
