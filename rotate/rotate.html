@@ -1,0 +1,364 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今天吃啥呢╯▽╰</title>
+    <style>
+        body, ul, ol, li, p, h1, h2, h3, h4, h5, h6, form, fieldset, table, td, img, div {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+
+        body {
+            color: #333;
+            font-size: 12px;
+            font-family: "Microsoft YaHei"
+        }
+
+        ul, ol {
+            list-style-type: none;
+        }
+
+        select, input, img, select {
+            vertical-align: middle;
+        }
+
+        a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        a:hover {
+            color: #c00;
+            text-decoration: none;
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        /* 大转盘样式 */
+        .banner {
+            display: block;
+            width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 20px;
+        }
+
+        .banner .turnplate {
+            display: block;
+            width: 100%;
+            position: relative;
+        }
+
+        .banner .turnplate canvas.item {
+            width: 100%;
+        }
+
+        .banner .turnplate img.pointer {
+            position: absolute;
+            width: 31.5%;
+            height: 42.5%;
+            left: 34.6%;
+            top: 23%;
+        }
+
+        input {
+            outline-style: none;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 4px 5px;
+            width: 240px;
+            font-size: 12px;
+            font-weight: 500;
+            font-family: "Microsoft soft";
+        }
+
+
+        button { /* 按钮美化 */
+            border-width: 0px; /* 边框宽度 */
+            border-radius: 3px; /* 边框半径 */
+            background: #E5302F; /* 背景颜色 */
+            cursor: pointer; /* 鼠标移入按钮范围时出现手势 */
+            outline: none; /* 不显示轮廓线 */
+            font-family: Microsoft YaHei; /* 设置字体 */
+            color: white; /* 字体颜色 */
+            font-size: 11px; /* 字体大小 */
+        }
+
+        button:hover { /* 鼠标移入按钮范围时改变颜色 */
+            background: #8B0000;
+        }
+    </style>
+    <script type="text/javascript" src="./jquery.1.10.2.js"></script>
+    <script type="text/javascript" src="./rotate.js"></script>
+    <script type="text/javascript" src="./jquery.nicescroll.js"></script>
+
+
+    <script type="text/javascript">
+        var turnplate = {
+            restaraunts: [],				//大转盘奖品名称
+            colors: [],					//大转盘奖品区块对应背景颜色
+            outsideRadius: 192,			//大转盘外圆的半径
+            textRadius: 155,				//大转盘奖品位置距离圆心的距离
+            insideRadius: 68,			//大转盘内圆的半径
+            startAngle: 0,				//开始角度
+
+            bRotate: false				//false:停止;ture:旋转
+        };
+
+        $(document).ready(
+            function () {
+                $("#nowMenu").niceScroll({
+                        cursorcolor: "#E5302F",
+                        autohidemode: "false"
+                    }
+                );
+            });
+
+        var fruitArray = ["苹果", "梨", "葡萄", "红提", "枣", "柑橘", "柚", "桃", "西瓜", "杏", "甜瓜", "香瓜", "荔枝", "甘蔗", "柿",
+            "柠檬", "香蕉", "芒果", "菠萝", "哈密瓜", "李", "石榴", "枸杞", "山楂", "椰子", "桑葚", "荸荠", "柚子",
+            "草莓", "沙糖桔", "木瓜", "橙", "圣女果", "龙眼", "黄瓜", "枇杷", "山竹", "红毛丹", "无花果", "布朗",
+            "杨桃", "人参果", "猕猴桃", "芭乐", "杨梅", "乌梅", "蓝莓", "西梅", "释迦", "百花果", "黄皮", "樱桃",
+            "雪莲果", "榴莲", "火龙果", "番石榴", "菠萝蜜", "百香果", "罗汉果", "莲雾", "核桃", "板栗", "开心果",
+            "瓜子", "榛子", "银杏", "松子", "果仁", "白果", "坚果", "槟榔果", "腰果", "樱桃", "李子", "桃子",
+            "草莓", "树莓", "桑葚", "葡萄", "人参果", "枇杷", "山楂", "梨", "沙果", "苹果", "桔子", "柑橘", "橙子", "柚子", "佛手",
+            "杏仁", "榛子", "板栗", "花生", "瓜子", "白兰瓜", "西瓜", "香瓜"];
+        $(document).ready(function () {
+            //动态添加大转盘的奖品与奖品区域背景颜色
+            turnplate.restaraunts = ["面", "炸鸡", "盖码饭"];
+            turnplate.colors = ["#FFF4D6", "#FFFFFF"];
+
+
+            var rotateTimeOut = function () {
+                $('#wheelcanvas').rotate({
+                    angle: 0,
+                    animateTo: 2160,
+                    duration: 8000,
+                    callback: function () {
+                        alert('网络超时，请检查您的网络设置！');
+                    }
+                });
+            };
+
+            //旋转转盘 item:奖品位置; txt：提示语;
+            var rotateFn = function (item, txt) {
+                var angles = item * (360 / turnplate.restaraunts.length) - (360 / (turnplate.restaraunts.length * 2));
+                if (angles < 270) {
+                    angles = 270 - angles;
+                } else {
+                    angles = 360 - angles + 270;
+                }
+                $('#wheelcanvas').stopRotate();
+                $('#wheelcanvas').rotate({
+                    angle: 0,
+                    animateTo: angles + 1800,
+                    duration: 8000,
+                    callback: function () {
+                        alert("今天吃啥呢，" + txt + "吧~");
+                        turnplate.bRotate = !turnplate.bRotate;
+                    }
+                });
+            };
+
+            $('.pointer').click(function () {
+                if (turnplate.bRotate) return;
+                turnplate.bRotate = !turnplate.bRotate;
+                //获取随机数(奖品个数范围内)
+                var item = rnd(1, turnplate.restaraunts.length);
+                //奖品数量等于10,指针落在对应奖品区域的中心角度[252, 216, 180, 144, 108, 72, 36, 360, 324, 288]
+                rotateFn(item, turnplate.restaraunts[item - 1]);
+            });
+        });
+
+        function rnd(n, m) {
+            var random = Math.floor(Math.random() * (m - n + 1) + n);
+            return random;
+
+        }
+
+
+        //页面所有元素加载完毕后执行drawRouletteWheel()方法对转盘进行渲染
+        window.onload = function () {
+            drawRouletteWheel();
+        };
+
+        function addNewItem() {
+            var newItemValue = document.getElementById("newItem").value;
+            if (newItemValue.length > 1) {
+                turnplate.restaraunts.push(newItemValue);
+                drawRouletteWheel();
+            }
+
+        }
+
+        function deleteItem(index) {
+            turnplate.restaraunts.splice(index, 1);
+            drawRouletteWheel();
+        }
+
+        function initNowMenu() {
+            $("#nowMenu").html("");
+            for (var i = 0; i < turnplate.restaraunts.length; i++) {
+                $("#nowMenu").append("<div>" + turnplate.restaraunts[i] + "&nbsp;&nbsp;&nbsp;&nbsp;<button onclick=\"javascript:deleteItem('" + i + "')\">不吃</button><div/>");
+
+            }
+        }
+
+        function resetNowMenu() {
+            turnplate.restaraunts = [];
+            drawRouletteWheel();
+        }
+
+        function drawRouletteWheel() {
+            var canvas = document.getElementById("wheelcanvas");
+            if (canvas.getContext) {
+                //根据奖品个数计算圆周角度
+                var arc = Math.PI / (turnplate.restaraunts.length / 2);
+                var ctx = canvas.getContext("2d");
+                //在给定矩形内清空一个矩形
+                ctx.clearRect(0, 0, 422, 422);
+                //strokeStyle 属性设置或返回用于笔触的颜色、渐变或模式
+                ctx.strokeStyle = "#FFBE04";
+                //font 属性设置或返回画布上文本内容的当前字体属性
+                ctx.font = 'bold 20px Microsoft YaHei';
+                for (var i = 0; i < turnplate.restaraunts.length; i++) {
+                    var angle = turnplate.startAngle + i * arc;
+                    ctx.fillStyle = turnplate.colors[i % 2];
+                    ctx.beginPath();
+                    //arc(x,y,r,起始角,结束角,绘制方向) 方法创建弧/曲线（用于创建圆或部分圆）
+                    ctx.arc(211, 211, turnplate.outsideRadius, angle, angle + arc, false);
+                    ctx.arc(211, 211, turnplate.insideRadius, angle + arc, angle, true);
+                    ctx.stroke();
+                    ctx.fill();
+                    //锁画布(为了保存之前的画布状态)
+                    ctx.save();
+
+                    //----绘制奖品开始----
+                    ctx.fillStyle = "#E5302F";
+                    var text = turnplate.restaraunts[i];
+                    var line_height = 17;
+                    //translate方法重新映射画布上的 (0,0) 位置
+                    ctx.translate(211 + Math.cos(angle + arc / 2) * turnplate.textRadius, 211 + Math.sin(angle + arc / 2) * turnplate.textRadius);
+
+                    //rotate方法旋转当前的绘图
+                    ctx.rotate(angle + arc / 2 + Math.PI / 2);
+
+                    /** 下面代码根据奖品类型、奖品名称长度渲染不同效果，如字体、颜色、图片效果。(具体根据实际情况改变) **/
+                    if (text.length > 6) {//奖品名称长度超过一定范围
+                        ctx.font = 'bold 16px Microsoft YaHei';
+                        text = text.substring(0, 6) + "||" + text.substring(6);
+                        var texts = text.split("||");
+                        for (var j = 0; j < texts.length; j++) {
+                            ctx.fillText(texts[j], -ctx.measureText(texts[j]).width / 2, j * line_height);
+                        }
+                    } else {
+                        ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
+                    }
+
+
+                    //添加对应图标
+                    if (text.indexOf("面") >= 0 || text.indexOf("粉") >= 0) {
+                        var img = document.getElementById("noodles-img");
+                        drawSmallImage(ctx, img);
+                    } else if (text.indexOf("奶茶") >= 0) {
+                        var img = document.getElementById("tea-img");
+                        drawSmallImage(ctx, img);
+                    } else if (text.indexOf("饭") >= 0) {
+                        var img = document.getElementById("rice-img");
+                        drawSmallImage(ctx, img);
+                    } else if (text.indexOf("牛") >= 0) {
+                        var img = document.getElementById("beef-img");
+                        drawSmallImage(ctx, img);
+                    } else if (text.indexOf("咖啡") >= 0 || text.indexOf("星巴克") >= 0) {
+                        var img = document.getElementById("coffee-img");
+                        drawSmallImage(ctx, img);
+                    } else if (text.indexOf("水果") >= 0 || inFruit(text)) {
+                        var img = document.getElementById("fruit-img");
+                        drawSmallImage(ctx, img);
+                    } else if (text.indexOf("汉堡") >= 0 || text.indexOf("炸鸡") >= 0 || text.indexOf("麦当劳") >= 0 || text.indexOf("肯德基") >= 0 || text.indexOf("KFC") >= 0 || text.indexOf("鸡肉卷") >= 0) {
+                        var img = document.getElementById("chicken-img");
+                        drawSmallImage(ctx, img);
+                    }
+                    //把当前画布返回（调整）到上一个save()状态之前
+                    ctx.restore();
+                    //----绘制奖品结束----
+                }
+            }
+            initNowMenu();
+        }
+
+        function inFruit(text) {
+            for (var i = 0; i <= fruitArray.length; i++) {
+                if (text.indexOf(fruitArray[i]) >= 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function drawSmallImage(ctx, img) {
+            img.onload = function () {
+                ctx.drawImage(img, -25, 25);
+            };
+            ctx.drawImage(img, -25, 25);
+        }
+
+
+        function defaultSelection() {
+            turnplate.restaraunts = ["牛腩煲", "牛腩面", "炸鸡", "香干盖码饭", "奶茶", "下去买水果加饭", "选一家新店"];
+            drawRouletteWheel();
+        }
+
+    </script>
+
+
+</head>
+<body style="overflow-x: hidden;width: 100%;height: 100%;background: #FFFACD">
+<img src="./noodles.png" id="noodles-img" style="display:none;"/>
+<img src="./chicken.png" id="chicken-img" style="display:none;"/>
+<img src="./tea.png" id="tea-img" style="display:none;"/>
+<img src="./fruit.png" id="fruit-img" style="display:none;"/>
+<img src="./rice.png" id="rice-img" style="display:none;"/>
+<img src="./beef.png" id="beef-img" style="display:none;"/>
+<img src="./coffee.png" id="coffee-img" style="display:none;"/>
+
+
+<div style="width: 100%;height: 100%;">
+    <div style="text-align: center">
+        <div id="left" style="width:425px;height: 225px;margin:0 auto;">
+            <div style="margin-top: 50px">
+                <input id="newItem"/>
+                <br>
+                <button onclick="javascript:addNewItem()">加上</button>
+                <button onclick="javascript:resetNowMenu()">清空</button>
+                <button onclick="javascript:defaultSelection()">常用</button>
+
+            </div>
+            <div>
+                <br>
+                <div id="nowMenu" style="height: 150px;width: 240px;margin-left: 100px;text-align: left">
+
+                </div>
+            </div>
+        </div>
+        <div id="right" style="margin:0 auto;">
+            <div class="banner">
+                <div class="turnplate">
+                    <canvas class="item" id="wheelcanvas" width="422px" height="422px"
+                            style="transform: rotate(288deg);"></canvas>
+                    <img class="pointer" src="./turnplate-pointer.png">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>
